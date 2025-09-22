@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      transition: background 0.3s, color 0.3s;
+      background: #f4f6f8;
+      color: #222;
+    }
+    .dark {
+      background: #1e1e1e;
+      color: #f1f1f1;
+    }
+    .calculator {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+      width: 340px;
+      transition: background 0.3s;
+    }
+    .dark .calculator {
+      background: #2c2c2c;
+    }
+    input {
+      width: 100%;
+      padding: 15px;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      text-align: right;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    button {
+      padding: 15px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 8px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      transform: scale(1.1);
+    }
+    .equal {
+      grid-column: span 2;
+      background: #28a745;
+    }
+    .equal:hover {
+      background: #1e7e34;
+    }
+    .history {
+      margin-top: 15px;
+      max-height: 100px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      background: rgba(0,0,0,0.360);
+      padding: 10px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" id="display" disabled>
+    <div class="buttons">
+      <button onclick="clearDisplay()">C</button>
+      <button onclick="backspace()">⌫</button>
+      <button onclick="append('/')">/</button>
+      <button onclick="append('*')">*</button>
+      <button onclick="append('-')">-</button>
+      <button onclick="append('7')">7</button>
+      <button onclick="append('8')">8</button>
+      <button onclick="append('9')">9</button>
+      <button onclick="append('+')">+</button>
+      <button onclick="append('√(')">√</button>
+      <button onclick="append('4')">4</button>
+      <button onclick="append('5')">5</button>
+      <button onclick="append('6')">6</button>
+      <button onclick="append('**2')">x²</button>
+      <button onclick="append('Math.PI')">π</button>
+      <button onclick="append('1')">1</button>
+      <button onclick="append('2')">2</button>
+      <button onclick="append('3')">3</button>
+      <button onclick="append('.')">.</button>
+      <button onclick="append('Math.E')">e</button>
+      <button onclick="append('0')">0</button>
+      <button class="equal" onclick="calculate()">=</button>
+      <button onclick="append('Math.sin(')">sin</button>
+      <button onclick="append('Math.cos(')">cos</button>
+      <button onclick="append('Math.log(')">log</button>
+      <button onclick="toggleTheme()">🌙/☀️</button>
+    </div>
+    <div class="history" id="history">History:</div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    const historyBox = document.getElementById("history");
+
+    function append(value) {
+      display.value += value;
+    }
+
+    function clearDisplay() {
+      display.value = "";
+    }
+
+    function backspace() {
+      display.value = display.value.slice(0, -1);
+    }
+
+    function calculate() {
+      try {
+        let expression = display.value.replace(/√/g, "Math.sqrt");
+        let result = eval(expression);
+        historyBox.innerHTML += "<br>" + display.value + " = " + result;
+        display.value = result;
+      } catch {
+        display.value = "Error";
+      }
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+    }
+
+    // Keyboard Support
+    document.addEventListener("keydown", (e) => {
+      if (/[0-9+\-*/.]/.test(e.key)) {
+        append(e.key);
+      } else if (e.key === "Enter") {
+        calculate();
+      } else if (e.key === "Backspace") {
+        backspace();
+      } else if (e.key === "Escape") {
+        clearDisplay();
+      }
+    });
+  </script>
+</body>
+</html>
